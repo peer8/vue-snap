@@ -7,8 +7,8 @@
     <meta name="generator" content="VuePress 1.5.2">
     
     <meta name="description" content="Lightweight Slider/Carousel based on CSS Scroll Snap">
-    <link rel="preload" href="/vue-snap/assets/css/0.styles.2737df24.css" as="style"><link rel="preload" href="/vue-snap/assets/js/app.cb523b04.js" as="script"><link rel="preload" href="/vue-snap/assets/js/2.8f2c8a64.js" as="script"><link rel="preload" href="/vue-snap/assets/js/8.3c275ec1.js" as="script"><link rel="prefetch" href="/vue-snap/assets/js/3.26128a45.js"><link rel="prefetch" href="/vue-snap/assets/js/4.d1070e0b.js"><link rel="prefetch" href="/vue-snap/assets/js/5.c377fd4b.js"><link rel="prefetch" href="/vue-snap/assets/js/6.9b0e3cdf.js"><link rel="prefetch" href="/vue-snap/assets/js/7.f159fbdc.js">
-    <link rel="stylesheet" href="/vue-snap/assets/css/0.styles.2737df24.css">
+    <link rel="preload" href="/vue-snap/assets/css/0.styles.827c27ae.css" as="style"><link rel="preload" href="/vue-snap/assets/js/app.71135085.js" as="script"><link rel="preload" href="/vue-snap/assets/js/2.51f990b9.js" as="script"><link rel="preload" href="/vue-snap/assets/js/8.52eacb5c.js" as="script"><link rel="prefetch" href="/vue-snap/assets/js/3.d4e3543a.js"><link rel="prefetch" href="/vue-snap/assets/js/4.669d567f.js"><link rel="prefetch" href="/vue-snap/assets/js/5.2aba7655.js"><link rel="prefetch" href="/vue-snap/assets/js/6.963007b9.js"><link rel="prefetch" href="/vue-snap/assets/js/7.4ae33e86.js">
+    <link rel="stylesheet" href="/vue-snap/assets/css/0.styles.827c27ae.css">
   </head>
   <body>
     <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/vue-snap/" class="home-link router-link-active"><!----> <span class="site-name">VueSnap</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/vue-snap/guide/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
@@ -31,6 +31,7 @@
 # or if you preffer npm
 npm
 </code></pre></div><h2 id="locally"><a href="#locally" class="header-anchor">#</a> Locally</h2> <p>Using only in specific component</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> Carousel<span class="token punctuation">,</span> Slide <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-snap'</span>
+<span class="token keyword">import</span> <span class="token string">'vue-snap/dist/vue-snap.css'</span>
 
 <span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
   components<span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -40,6 +41,7 @@ npm
 <span class="token punctuation">}</span>
 </code></pre></div><h2 id="globally"><a href="#globally" class="header-anchor">#</a> Globally</h2> <p>Using <code>&lt;carousel /&gt;</code> and <code>&lt;slide /&gt;</code> components globally across your Vue Application</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
 <span class="token keyword">import</span> VueSnap <span class="token keyword">from</span> <span class="token string">'vue-snap'</span>
+<span class="token keyword">import</span> <span class="token string">'vue-snap/dist/vue-snap.css'</span>
 
 Vue<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>VueSnap<span class="token punctuation">)</span>
 </code></pre></div><h2 id="html-markup"><a href="#html-markup" class="header-anchor">#</a> HTML Markup</h2> <p>Then you can use it in your HTML markup.</p> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>carousel</span><span class="token punctuation">&gt;</span></span>
@@ -54,6 +56,6 @@ Vue<span class="token punctuation">.</span><span class="token function">use</spa
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slide</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>carousel</span><span class="token punctuation">&gt;</span></span>
 </code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/bartdominiak/vue-snap/edit/master/docs/guide/README.md" target="_blank" rel="noopener noreferrer">Help us improve this page!</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
-    <script src="/vue-snap/assets/js/app.cb523b04.js" defer></script><script src="/vue-snap/assets/js/2.8f2c8a64.js" defer></script><script src="/vue-snap/assets/js/8.3c275ec1.js" defer></script>
+    <script src="/vue-snap/assets/js/app.71135085.js" defer></script><script src="/vue-snap/assets/js/2.51f990b9.js" defer></script><script src="/vue-snap/assets/js/8.52eacb5c.js" defer></script>
   </body>
 </html>
