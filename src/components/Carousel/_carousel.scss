@@ -1,15 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap');
-
-body {
-    font-family: 'Lato', sans-serif;
-    font-weight: 300;
-}
-
 .story-carousel {
+    .slide-indicators {
+        position: absolute;
+        bottom: 20px;
+        z-index: 999;
+
+        &.center {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        &.vcenter {
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        &.left {
+            left: 6%;
+        }
+        &.right {
+            right: 6%;
+        }
+
+        .slide-indicator-icon {
+            display: flex;
+            width: 10px;
+            height: 10px;
+            margin: 0 .1rem;
+            cursor: pointer;
+            border-radius: 50%;
+            background-color: rgba( 0, 0, 0, .2);
+        }
+
+        &.vcenter {
+            .slide-indicator-icon {
+                flex-direction: column;
+            }
+        }
+
+        .slide-indicator-active {
+            background-color: rgba( 255, 255, 255, .2);
+        }
+    }
+
     &__slide {
-        height: 200px;
+        height: 300px;
         font-size: 18px;
         color: #fff;
+    }
+
+    &--vertical {
+        .story-carousel__slide {
+            height: 100%;
+            width: 100%;
+        }
     }
 
     &--colors {

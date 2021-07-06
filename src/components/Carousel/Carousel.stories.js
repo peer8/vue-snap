@@ -35,6 +35,34 @@ export const Default = (_, { argTypes }) => ({
   `
 })
 
+export const Vertical = (_, { argTypes }) => ({
+  props: Object.keys(argTypes),
+  data: () => ({ carouselMock }),
+  components: { Carousel, Slide },
+  methods: actions('pageEvent', 'boundLeftEvent', 'boundRightEvent', 'mountedEvent'),
+  template: `
+    <carousel
+      class="story-carousel story-carousel--colors story-carousel--vertical"
+      :hide-arrows="true"
+      :hide-arrows-on-bound="hideArrowsOnBound"
+      :isVertical="true"
+      :indicators="'vcenter'"
+      @page="pageEvent"
+      @bound-left="boundLeftEvent"
+      @bound-right="boundRightEvent"
+      @mounted="mountedEvent"
+    >
+      <slide
+        class="story-carousel__slide"
+        v-for="{ id, content } in carouselMock"
+        :key="id"
+      >
+        {{ content }}
+      </slide>
+    </carousel>
+  `
+})
+
 export const Multiple = (_, { argTypes }) => ({
   props: Object.keys(argTypes),
   data: () => ({ carouselMock }),
