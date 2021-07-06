@@ -20,6 +20,14 @@
     display: none;
 }
 
+.vs-carousel__wrapper.vs-carousel--vertical {
+    flex-direction: column;
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
 .vs-carousel__slide {
     flex: 0 0 100%;
     height: 100%;

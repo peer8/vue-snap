@@ -4,10 +4,26 @@
       :is="tag"
       ref="vsWrapper"
       class="vs-carousel__wrapper"
+      :class="{ 'vs-carousel--vertical': isVertical }"
     >
       <!-- @slot Slot for Slides -->
       <slot />
     </component>
+
+    <!-- Slide indicators -->
+    <div
+      v-if="indicators"
+      :class="`slide-indicators ${indicators}`"
+      @click.stop
+    >
+      <span
+        v-for="i in slidesDim.length"
+        :key="i"
+        :class="{ 'slide-indicator-active': currentPage === i - 1 }"
+        class="slide-indicator-icon"
+        @click="handleIndicator(i - 1)"
+      />
+    </div>
 
     <!-- @slot Slot for Arrows -->
     <slot
@@ -72,6 +88,20 @@ export default {
       default: false
     },
     /**
+     * Make a vertical carousel (scroller)
+     */
+    isVertical: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Show slide indicators
+     */
+    indicators: {
+      type: String,
+      default: 'center'
+    },
+    /**
      * Custom tag
      */
     tag: {
@@ -83,6 +113,7 @@ export default {
      */
     i18n: {
       type: Object,
+      // TODO: isVertical ? :
       default: () => ({ slideLeft: 'Slide left', slideRight: 'Slide right' }),
       validator: config => {
         const translations = ['slideLeft', 'slideRight']
@@ -93,9 +124,9 @@ export default {
   data: () => ({
     boundLeft: true,
     boundRight: false,
-    slidesWidth: [],
-    wrapperScrollWidth: 0,
-    wrapperVisibleWidth: 0,
+    slidesDim: [],
+    wrapperScrollDim: 0,
+    wrapperVisibleDim: 0,
     currentPage: 0,
     previousPage: 0,
     currentPos: 0,
@@ -183,8 +214,8 @@ export default {
         return
       }
 
-      this.calcWrapperWidth()
-      this.calcSlidesWidth()
+      this.calcWrapperDim()
+      this.calcSlidesDim()
       this.calcCurrentPosition()
       this.setCurrentPage()
       this.calcBounds()
@@ -202,7 +233,7 @@ export default {
       // Find the closest point, with 5px approximate.
       const isBoundLeft = approximatelyEqual(this.currentPos, 0, 5)
       const isBoundRight = approximatelyEqual(
-        this.wrapperScrollWidth - this.wrapperVisibleWidth,
+        this.wrapperScrollDim - this.wrapperVisibleDim,
         this.currentPos,
         5
       )
@@ -219,31 +250,43 @@ export default {
         this.boundRight = false
       }
     },
-    calcWrapperWidth() {
-      this.wrapperScrollWidth = this.$refs.vsWrapper.scrollWidth
-      this.wrapperVisibleWidth = this.$refs.vsWrapper.offsetWidth
+    calcWrapperDim() {
+      if (this.isVertical) {
+        this.wrapperScrollDim = this.$refs.vsWrapper.scrollHeight
+        this.wrapperVisibleDim = this.$refs.vsWrapper.offsetHeight
+      } else {
+        this.wrapperScrollDim = this.$refs.vsWrapper.scrollWidth
+        this.wrapperVisibleDim = this.$refs.vsWrapper.offsetWidth
+      }
     },
-    calcSlidesWidth() {
+    calcSlidesDim() {
       const childNodes = [ ...this.$refs.vsWrapper.children ]
 
-      this.slidesWidth = childNodes.map(node => ({
-        offsetLeft: node.offsetLeft,
-        width: node.offsetWidth
-      }))
+      if (this.isVertical) {
+        this.slidesDim = childNodes.map(node => ({
+          offsetTop: node.offsetTop,
+          height: node.offsetHeight
+        }))
+      } else {
+        this.slidesDim = childNodes.map(node => ({
+          offsetLeft: node.offsetLeft,
+          width: node.offsetWidth
+        }))
+      }
     },
     getCurrentPage() {
       // Last element if there is nothing left to scroll
       if (approximatelyEqual(
-        this.currentPos + this.wrapperVisibleWidth,
-        this.wrapperScrollWidth,
+        this.currentPos + this.wrapperVisibleDim,
+        this.wrapperScrollDim,
         5
       )) {
-        return this.slidesWidth.length - 1
+        return this.slidesDim.length - 1
       }
 
       // Find slide closest to scroll position, with 5px approximate
-      return this.slidesWidth.findIndex(slide => {
-        return approximatelyEqual(slide.offsetLeft, this.currentPos, 5)
+      return this.slidesDim.findIndex(slide => {
+        return approximatelyEqual(this.isVertical ? slide.offsetTop : slide.offsetLeft, this.currentPos, 5)
       })
     },
     setCurrentPage(index) {
@@ -257,7 +300,7 @@ export default {
       this.currentPage = newPage > 0 ? newPage : 0
     },
     calcCurrentPosition() {
-      this.currentPos = this.$refs.vsWrapper.scrollLeft || 0
+      this.currentPos = (this.isVertical ? this.$refs.vsWrapper.scrollTop : this.$refs.vsWrapper.scrollLeft)  || 0
     },
     attachMutationObserver() {
       this.observer = new MutationObserver(() => {
@@ -273,16 +316,19 @@ export default {
       this.goToSlide(this.currentPage + direction)
     },
     goToSlide(index) {
-      if (!this.slidesWidth[index]) {
+      if (!this.slidesDim[index]) {
         return
       }
 
-      this.$refs.vsWrapper.scrollTo({
-        left: this.slidesWidth[index].offsetLeft,
-        behavior: 'smooth'
-      })
+      const prop = { behavior: 'smooth' }
+      if (this.isVertical) prop.top = this.slidesDim[index].offsetTop
+      else prop.left = this.slidesDim[index].offsetLeft
+      this.$refs.vsWrapper.scrollTo(prop)
 
       this.setCurrentPage(index)
+    },
+    handleIndicator(index) {
+      this.goToSlide(index)
     }
   }
 }

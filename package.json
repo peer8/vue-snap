@@ -1,6 +1,6 @@
 {
   "name": "vue-snap",
-  "version": "0.7.1",
+  "version": "1.1.0",
   "description": "Lightweight Carousel based on CSS Scroll Snap",
   "main": "dist/vue-snap.umd.js",
   "module": "dist/vue-snap.esm.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/bartdominiak/vue-snap.git"
+    "url": "git+ssh://git@github.com/peer8/vue-snap.git"
   },
   "keywords": [
     "vue",
@@ -49,13 +49,13 @@
     "@rollup/plugin-babel": "^5.2.2",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
-    "@storybook/addon-a11y": "^6.2.9",
-    "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-a11y": "^6.3.2",
+    "@storybook/addon-actions": "^6.3.2",
     "@storybook/addon-controls": "^^6.2.9",
-    "@storybook/addon-docs": "^6.2.9",
-    "@storybook/addon-storysource": "^6.2.9",
-    "@storybook/addon-viewport": "^6.2.9",
-    "@storybook/vue": "^6.2.9",
+    "@storybook/addon-docs": "^6.3.2",
+    "@storybook/addon-storysource": "^6.3.2",
+    "@storybook/addon-viewport": "^6.3.2",
+    "@storybook/vue": "^6.3.2",
     "babel-loader": "^8.2.2",
     "babel-preset-vue": "^2.0.2",
     "eslint": "^7.15.0",
