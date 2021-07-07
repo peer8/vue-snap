@@ -4,10 +4,26 @@
       :is="tag"
       ref="vsWrapper"
       class="vs-carousel__wrapper"
+      :class="{ 'vs-carousel--vertical': isVertical }"
     >
       <!-- @slot Slot for Slides -->
       <slot />
     </component>
+
+    <!-- Slide indicators -->
+    <div
+      v-if="indicators"
+      :class="`slide-indicators ${indicators}`"
+      @click.stop
+    >
+      <span
+        v-for="i in slidesDim.length"
+        :key="i"
+        :class="{ 'slide-indicator-active': currentPage === i - 1 }"
+        class="slide-indicator-icon"
+        @click="handleIndicator(i - 1)"
+      />
+    </div>
 
     <!-- @slot Slot for Arrows -->
     <slot
@@ -72,6 +88,20 @@ const props = {
     default: false
   },
   /**
+   * Make a vertical carousel (scroller)
+   */
+  isVertical: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Show slide indicators
+   */
+  indicators: {
+    type: String,
+    default: 'center'
+  },
+  /**
    * Custom tag
    */
   tag: {
@@ -83,6 +113,7 @@ const props = {
    */
   i18n: {
     type: Object,
+    // TODO: isVertical ?
     default: () => ({ slideLeft: 'Slide left', slideRight: 'Slide right' }),
     validator: config => {
       const translations = ['slideLeft', 'slideRight']
@@ -98,9 +129,9 @@ export default {
     const vsWrapper = ref(null)
     const boundLeft = ref(true)
     const boundRight = ref(false)
-    const slidesWidth = ref([])
-    const wrapperScrollWidth = ref(0)
-    const wrapperVisibleWidth = ref(0)
+    const slidesDim = ref([])
+    const wrapperScrollDim = ref(0)
+    const wrapperVisibleDim = ref(0)
     const currentPage = ref(0)
     const currentPos = ref(0)
     const maxPages = ref(0)
@@ -124,7 +155,7 @@ export default {
       // Find the closest point, with 5px approximate.
       const isBoundLeft = approximatelyEqual(currentPos.value, 0, 5)
       const isBoundRight = approximatelyEqual(
-        wrapperScrollWidth.value - wrapperVisibleWidth.value,
+        wrapperScrollDim.value - wrapperVisibleDim.value,
         currentPos.value,
         5
       )
@@ -153,32 +184,39 @@ export default {
         boundRight.value = false
       }
     }
-    const calcWrapperWidth = () => {
-      wrapperScrollWidth.value = vsWrapper.value.scrollWidth
-      wrapperVisibleWidth.value = vsWrapper.value.offsetWidth
+    const calcWrapperDim = () => {
+      wrapperScrollDim.value = vsWrapper.value.scrollWidth
+      wrapperVisibleDim.value = vsWrapper.value.offsetWidth
     }
-    const calcSlidesWidth = () => {
+    const calcSlidesDim = () => {
       const childNodes = [ ...vsWrapper.value.children ]
 
-      slidesWidth.value = childNodes.map(node => ({
-        offsetLeft: node.offsetLeft,
-        width: node.offsetWidth
-      }))
+      if (this.isVertical) {
+        this.slidesDim = childNodes.map(node => ({
+          offsetTop: node.offsetTop,
+          height: node.offsetHeight
+        }))
+      } else {
+        this.slidesDim = childNodes.map(node => ({
+          offsetLeft: node.offsetLeft,
+          width: node.offsetWidth
+        }))
+      }
     }
-    const calcNextWidth = direction => {
+    const calcNextDim = direction => {
       const nextSlideIndex = direction > 0 ? currentPage.value : currentPage.value + direction
-      const width = slidesWidth.value[nextSlideIndex].width || 0
+      const dim = slidesDim.value[nextSlideIndex][this.isVertical ? 'height' : 'width'] || 0
 
-      if (!width) {
+      if (!dim) {
         return
       }
 
-      return width * direction
+      return dim * direction
     }
     const calcCurrentPage = () => {
-      const getCurrentPage = slidesWidth.value.findIndex(slide => {
+      const getCurrentPage = slidesDim.value.findIndex(slide => {
         // Find the closest point, with 5px approximate.
-        return approximatelyEqual(slide.offsetLeft, currentPos.value, 5)
+        return approximatelyEqual(this.isVertical ? slide.offsetTop : slide.offsetLeft, currentPos.value, 5)
       })
 
       if (getCurrentPage !== -1 && getCurrentPage !== -2) {
@@ -186,19 +224,23 @@ export default {
       }
     }
     const calcCurrentPosition = () => {
-      currentPos.value = vsWrapper.value.scrollLeft || 0
+      currentPos.value = vsWrapper.value[this.isVertical ? 'scrollTop' : 'scrollLeft'] || 0
     }
     const calcMaxPages = () => {
-      const maxPos = wrapperScrollWidth.value - wrapperVisibleWidth.value
-      maxPages.value = slidesWidth.value.findIndex(({ offsetLeft }) => offsetLeft > maxPos) - 1
+      const maxPos = wrapperScrollDim.value - wrapperVisibleDim.value
+      if (this.isVertical) {
+        maxPages.value = slidesDim.value.findIndex(({ offsetTop }) => offsetTop > maxPos) - 1
+      } else {
+        maxPages.value = slidesDim.value.findIndex(({ offsetLeft }) => offsetLeft > maxPos) - 1
+      }
     }
     const calcOnInit = () => {
       if (!vsWrapper.value) {
         return
       }
 
-      calcWrapperWidth()
-      calcSlidesWidth()
+      calcWrapperDim()
+      calcSlidesDim()
       calcCurrentPosition()
       calcCurrentPage()
       calcBounds()
@@ -215,10 +257,14 @@ export default {
     }
 
     const changeSlide = direction => {
-      const nextSlideWidth = calcNextWidth(direction)
+      const nextSlideDim = calcNextDim(direction)
 
-      if (nextSlideWidth) {
-        vsWrapper.value.scrollBy({ left: nextSlideWidth, behavior: 'smooth' })
+      if (nextSlideDim) {
+        if (this.isVertical) {
+          vsWrapper.value.scrollBy({ top: nextSlideDim, behavior: 'smooth' })
+        } else {
+          vsWrapper.value.scrollBy({ left: nextSlideDim, behavior: 'smooth' })
+        }
       }
     }
 
