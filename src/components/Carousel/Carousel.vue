@@ -286,7 +286,7 @@ export default {
 
       // Find slide closest to scroll position, with 5px approximate
       return this.slidesDim.findIndex(slide => {
-        return approximatelyEqual(slide.offsetLeft, this.currentPos, 5)
+        return approximatelyEqual(this.isVertical ? slide.offsetTop : slide.offsetLeft, this.currentPos, 5)
       })
     },
     setCurrentPage(index) {
@@ -300,7 +300,7 @@ export default {
       this.currentPage = newPage > 0 ? newPage : 0
     },
     calcCurrentPosition() {
-      this.currentPos = this.$refs.vsWrapper.scrollLeft || 0
+      this.currentPos = (this.isVertical ? this.$refs.vsWrapper.scrollTop : this.$refs.vsWrapper.scrollLeft)  || 0
     },
     attachMutationObserver() {
       this.observer = new MutationObserver(() => {
@@ -320,22 +320,14 @@ export default {
         return
       }
 
-      if (this.isVertical) {
-        this.$refs.vsWrapper.scrollTo({
-          top: this.slidesDim[index].offsetTop,
-          behavior: 'smooth'
-        })
-      } else {
-        this.$refs.vsWrapper.scrollTo({
-          left: this.slidesDim[index].offsetLeft,
-          behavior: 'smooth'
-        })
-      }
+      const prop = { behavior: 'smooth' }
+      if (this.isVertical) prop.top = this.slidesDim[index].offsetTop
+      else prop.left = this.slidesDim[index].offsetLeft
+      this.$refs.vsWrapper.scrollTo(prop)
 
       this.setCurrentPage(index)
     },
     handleIndicator(index) {
-      console.log('handleIndicator', index)
       this.goToSlide(index)
     }
   }
